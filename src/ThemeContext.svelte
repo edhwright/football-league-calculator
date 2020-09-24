@@ -1,0 +1,42 @@
+<script>
+  //https://dev.to/josefaidt/theming-in-svelte-with-css-variables-53kd
+
+  import { setContext, onMount } from "svelte";
+  import { writable } from "svelte/store";
+  import { themes as _themes } from "./themes.js";
+
+  export let themes = [..._themes];
+  let _current = themes[0].name;
+
+  const getCurrentTheme = (name) => themes.find((h) => h.name === name);
+  const Theme = writable(getCurrentTheme(_current));
+
+  setContext("theme", {
+    theme: Theme,
+    toggle: () => {
+      let _currentIndex = themes.findIndex((h) => h.name === _current);
+      //use %?
+      _current =
+        themes[_currentIndex === themes.length - 1 ? 0 : (_currentIndex += 1)]
+          .name;
+      Theme.update((t) => ({ ...t, ...getCurrentTheme(_current) }));
+      setRootColors(getCurrentTheme(_current));
+    },
+  });
+
+  onMount(() => {
+    setRootColors(getCurrentTheme(_current));
+  });
+
+  // sets CSS vars for easy use in components
+  // ex: var(--theme-background)
+  const setRootColors = (theme) => {
+    for (let [prop, color] of Object.entries(theme.colors)) {
+      let varString = `--theme-${prop}`;
+      document.documentElement.style.setProperty(varString, color);
+    }
+    document.documentElement.style.setProperty("--theme-name", theme.name);
+  };
+</script>
+
+<slot />
