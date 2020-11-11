@@ -1,10 +1,32 @@
-import { fetchState, matchesStore, teamsStore, tableUpdated } from "./stores.js";
+import { fetchState, matchesStore, teamsStore, tableUpdated, urlStore } from "./stores.js";
 import { sortTeams, addMatchData, removeMatchData } from "./utils.js";
+import { JSONUncrush } from "./JSONCrush.js";
 
 export let currentMatchday;
 export let teamIdToObjectLookup = new Map();
 
+const params = new URLSearchParams(window.location.search);
+
+let useUrlState = false;
+let urlMatchesState = params.get("s");
+let urlLeagueState = params.get("l");
+
+if (urlMatchesState && urlLeagueState) {
+  useUrlState = true;
+}
+
+let urlState = {
+  useUrl: useUrlState,
+  matches: urlMatchesState,
+  league: urlLeagueState,
+}
+
+urlStore.set(urlState);
+
+window.history.replaceState({}, "", window.location.pathname);
+
 export async function getData(league) {
+
   fetchState.set("LOADING");
 
   let urls = [
@@ -17,17 +39,21 @@ export async function getData(league) {
   if (data[0].matches.length === 0 || data[1].status === "OFFSEASON") {
     fetchState.set("OFFSEASON");
   } else {
-    let [sortedMatches, sortedTeams] = sortData(data, league);
+    let [sortedMatches, sortedTeams] = sortData(data, league, urlState);
     currentMatchday = sortedMatches[0][0].season.currentMatchday;
     sortTeams(sortedTeams.teams, league.sort);
     matchesStore.set(sortedMatches);
     teamsStore.set(sortedTeams);
     fetchState.set("DONE");
     tableUpdated.set(true);
+    urlState.useUrl = false;
+    urlStore.set(urlState);
   }
+  // console.log("getData ran" + urlMatchesState);
 }
 
-function sortData(data, league) {
+function sortData(data, league, urlState) {
+
   //initialising 2d array containing. matchweek arrays containing array of matches
   let matches = [];
   for (let i = 0; i < league.gw; i++) {
@@ -58,29 +84,55 @@ function sortData(data, league) {
     }
   }
 
-  //go through every matchweek
-  //go through every match
-  for (let i = 0; i < matches.length; i++) {
-    for (let j = 0; j < matches[i].length; j++) {
-      //get team objects from team ids in match object
-      let teamshome = teamIdToObjectLookup.get(matches[i][j].homeTeam.id);
-      let teamsaway = teamIdToObjectLookup.get(matches[i][j].awayTeam.id);
-      let homeScore = matches[i][j].score.fullTime.homeTeam;
-      let awayScore = matches[i][j].score.fullTime.awayTeam;
-
-      //if match has been played
-      if (homeScore != null && awayScore != null) {
-        addMatchData(teamshome, homeScore, teamsaway, awayScore, i);
-      } else {
-        removeMatchData(teamshome, teamsaway, i);
-      }
-    }
-  }
-
   for (let i = 0; i < matches.length; i++) {
     matches[i].sort((a, b) => a.utcDate.localeCompare(b.utcDate) || a.homeTeam.name.localeCompare(b.homeTeam.name));
   }
 
+  if (urlState.useUrl) {
+    let decodedUrl = decodeURIComponent(urlState.matches);
+    let urlUncrushed = JSON.parse(JSONUncrush(decodedUrl));
+    let m = urlUncrushed.matches;
+
+    for (let i = 0; i < matches.length; i++) {
+      for (let j = 0; j < matches[i].length; j++) {
+        let homeScore = m[i][j][0];
+        let awayScore = m[i][j][1];
+
+        //changing the matches array
+        matches[i][j].score.fullTime.homeTeam = homeScore;
+        matches[i][j].score.fullTime.awayTeam = awayScore;
+
+        //changing the teams array
+        let teamshome = teamIdToObjectLookup.get(matches[i][j].homeTeam.id);
+        let teamsaway = teamIdToObjectLookup.get(matches[i][j].awayTeam.id);
+
+        if (homeScore != null && awayScore != null) {
+          addMatchData(teamshome, homeScore, teamsaway, awayScore, i);
+        } else {
+          removeMatchData(teamshome, teamsaway, i);
+        }
+      }
+    }
+  } else {
+    //go through every matchweek
+    //go through every match
+    for (let i = 0; i < matches.length; i++) {
+      for (let j = 0; j < matches[i].length; j++) {
+        //get team objects from team ids in match object
+        let teamshome = teamIdToObjectLookup.get(matches[i][j].homeTeam.id);
+        let teamsaway = teamIdToObjectLookup.get(matches[i][j].awayTeam.id);
+        let homeScore = matches[i][j].score.fullTime.homeTeam;
+        let awayScore = matches[i][j].score.fullTime.awayTeam;
+
+        //if match has been played
+        if (homeScore != null && awayScore != null) {
+          addMatchData(teamshome, homeScore, teamsaway, awayScore, i);
+        } else {
+          removeMatchData(teamshome, teamsaway, i);
+        }
+      }
+    }
+  }
   data[0] = matches;
   return data;
 }
