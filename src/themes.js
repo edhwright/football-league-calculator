@@ -4,7 +4,9 @@ export const themes = [
         colors: {
             background: 'rgb(224,228,232)',
             foreground: 'rgb(246,246,246)',
+            foregroundLighter: 'rgb(250,250,250)',
             hover: 'rgb(236,236,236)',
+            buttonHover: 'rgb(214,218,222)',
             text: 'rgb(2,32,71)',
             outline: '#c3cfdc',
             highlight: 'rgb(21,101,192)',
@@ -30,7 +32,9 @@ export const themes = [
         colors: {
             background: 'rgb(30,30,30)',
             foreground: 'rgb(42,42,42)',
+            foregroundLighter: 'rgb(52,52,52)',
             hover: 'rgb(32,32,32)',
+            buttonHover: 'rgb(42,42,42)',
             text: 'rgb(221,221,221)',
             outline: 'rgb(68,68,68)',
             highlight: 'rgb(37,204,146)',
