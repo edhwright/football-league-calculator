@@ -24,31 +24,19 @@ export const plSort = (a, b) => {
 
     if (aPoints > bPoints) {
         return -1;
-    }
-
-    if (aPoints < bPoints) {
+    } else if (aPoints < bPoints) {
         return 1;
-    }
-
-    if (aPoints === bPoints) {
+    } else {
         if (aGoalDiff > bGoalDiff) {
             return -1;
-        }
-
-        if (aGoalDiff < bGoalDiff) {
+        } else if (aGoalDiff < bGoalDiff) {
             return 1;
-        }
-
-        if (aGoalDiff === bGoalDiff) {
+        } else {
             if (aGoalsFor > bGoalsFor) {
                 return -1;
-            }
-
-            if (aGoalsFor < bGoalsFor) {
+            } else if (aGoalsFor < bGoalsFor) {
                 return 1;
-            }
-
-            if (aGoalsFor === bGoalsFor) {
+            } else {
                 nTB = { ...nTB, [a.id]: true, [b.id]: true };
                 needTieBreaker.set(nTB);
 
@@ -63,6 +51,7 @@ export const plSort = (a, b) => {
         }
     }
 }
+
 
 export const isChampion = (teams, totalmatches) => {
 
