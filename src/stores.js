@@ -6,6 +6,7 @@ export const teamsStore = writable(undefined);
 export const selected = writable("selectInit");
 export const tableUpdated = writable(false);
 export const needTieBreaker = writable({});
+export const urlStore = writable({});
 export const view = writable({
     mobile: false,
     mobileTabSelected: "matches",
@@ -13,4 +14,3 @@ export const view = writable({
     matches: true,
     table: true,
 });
-
