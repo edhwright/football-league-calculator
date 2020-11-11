@@ -144,24 +144,27 @@
     min-width: 200px;
   }
 
-  .home .club {
+  .home-border-name {
     border-top: 2px solid var(--theme-matchesBorder);
     border-bottom: 2px solid var(--theme-foreground);
   }
 
-  .away .club {
+  .away-border-name {
     border-top: 2px solid var(--theme-foreground);
   }
 
-  .home .scoreContainer {
-    min-width: 40px !important;
+  .home-border-score {
     border-top: 2px solid var(--theme-matchesBorder);
     border-bottom: 2px solid var(--bg-color);
   }
 
-  .away .scoreContainer {
-    min-width: 40px !important;
+  .away-border-score {
     border-top: 2px solid var(--bg-color);
+    border-bottom: 2px solid var(--theme-matchesBorder);
+  }
+
+  .scoreContainer {
+    min-width: 40px !important;
   }
 
   .team-score {
@@ -174,14 +177,18 @@
     text-align: center;
   }
 
-  .away-score {
-    background: var(--bg-color);
-    color: var(--text-color);
-  }
-
   .home-score {
     background: var(--bg-color);
     color: var(--text-color);
+    -webkit-text-fill-color: var(--text-color);
+    opacity: 1; /* required on iOS */
+  }
+
+  .away-score {
+    background: var(--bg-color);
+    color: var(--text-color);
+    -webkit-text-fill-color: var(--text-color);
+    opacity: 1; /* required on iOS */
   }
 
   /* Chrome, Safari, Edge, Opera */
@@ -201,26 +208,15 @@
     position: relative;
     outline: 2px solid auto;
   }
-
-  @media (min-width: 980px) {
-    .away .club {
-      border-top: 2px solid var(--theme-foreground);
-      border-bottom: 2px solid var(--theme-matchesBorder);
-    }
-
-    .away .scoreContainer {
-      min-width: 40px !important;
-      border-top: 1.5px solid var(--bg-color);
-      border-bottom: 2px solid var(--theme-matchesBorder);
-    }
-  }
 </style>
 
 <tr class="home">
-  <td class="crest club"><img src={teamshome.crestURL} alt="" /></td>
-  <td class="name club">{teamshome.name}</td>
+  <td class="crest club home-border-name">
+    <img src={teamshome.crestURL} alt="" />
+  </td>
+  <td class="name club home-border-name">{teamshome.name}</td>
   <td
-    class="scoreContainer"
+    class="scoreContainer home-border-score"
     style=" --bg-color: {homeInputBG}; --text-color: {homeInputText}">
     <input
       type="number"
@@ -235,10 +231,12 @@
   </td>
 </tr>
 <tr class="away">
-  <td class="crest club"><img src={teamsaway.crestURL} alt="" /></td>
-  <td class="name club">{teamsaway.name}</td>
+  <td class="crest club away-border-name">
+    <img src={teamsaway.crestURL} alt="" />
+  </td>
+  <td class="name club away-border-name">{teamsaway.name}</td>
   <td
-    class="scoreContainer"
+    class="scoreContainer away-border-score"
     style="--bg-color: {awayInputBG}; --text-color: {awayInputText}">
     <input
       type="number"
