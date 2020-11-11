@@ -5,7 +5,7 @@
     ligueBorCol,
     bundesBorCol,
   } from "../../borderColours.js";
-  import { selected, fetchState } from "../../stores.js";
+  import { selected, fetchState, urlStore } from "../../stores.js";
   import { plSort } from "../../utils.js";
   import { getContext } from "svelte";
   const { theme } = getContext("theme");
@@ -56,11 +56,19 @@
       borderCol: bundesBorCol,
     },
   ];
+
+  console.log($urlStore.useUrl);
+  console.log($urlStore.urlLeagueState);
+  console.log($urlStore);
+  if ($urlStore.useUrl) {
+    let league = leagues.find((l) => l.id === $urlStore.league);
+    $selected = league;
+  }
 </script>
 
 <style>
   select {
-    background-color: var(--theme-foreground);
+    background-color: var(--theme-foregroundLighter);
     color: var(--theme-text);
     border: 1px solid var(--theme-outline);
     cursor: pointer;
