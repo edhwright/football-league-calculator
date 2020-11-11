@@ -2,7 +2,7 @@
   import Main from "./Main.svelte";
   import Header from "./Header/Header.svelte";
   import Footer from "./Footer/Footer.svelte";
-  import { selected, fetchState } from "../stores.js";
+  import { selected, fetchState, urlStore } from "../stores.js";
 </script>
 
 <style>
