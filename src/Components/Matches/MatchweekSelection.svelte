@@ -113,7 +113,7 @@
   }
 
   button:hover {
-    background-color: var(--theme-foreground);
+    background-color: var(--theme-buttonHover);
   }
 
   button:focus {
