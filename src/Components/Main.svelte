@@ -13,7 +13,6 @@
   import MatchesTable from "./Matches/MatchesTable.svelte";
   import Table from "./Table/Table.svelte";
   import MatchweekSelection from "./Matches/MatchweekSelection.svelte";
-
   import { getData } from "../fetchData.js";
 
   $: getData($selected);
@@ -148,7 +147,9 @@
     {#if $fetchState === 'LOADING'}
       <Spinner />
     {:else if $fetchState === 'OFFSEASON'}
-      The fixtures for {$selected.name} haven't been generated yet. 🕒
+      The fixtures for
+      {$selected.name}
+      haven't been generated yet. 🕒
     {:else if $fetchState === 'ERROR'}
       Failed to reach server. Try again soon! 😟
     {/if}
