@@ -57,9 +57,6 @@
     },
   ];
 
-  console.log($urlStore.useUrl);
-  console.log($urlStore.urlLeagueState);
-  console.log($urlStore);
   if ($urlStore.useUrl) {
     let league = leagues.find((l) => l.id === $urlStore.league);
     $selected = league;
