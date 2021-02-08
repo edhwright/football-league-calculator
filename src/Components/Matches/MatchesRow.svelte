@@ -160,7 +160,7 @@
 
   .away-border-score {
     border-top: 2px solid var(--bg-color);
-    border-bottom: 2px solid var(--theme-matchesBorder);
+    /* border-bottom: 2px solid var(--theme-matchesBorder); */
   }
 
   .scoreContainer {

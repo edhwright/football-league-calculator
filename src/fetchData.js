@@ -7,16 +7,11 @@ export let teamIdToObjectLookup = new Map();
 
 const params = new URLSearchParams(window.location.search);
 
-let useUrlState = false;
 let urlMatchesState = params.get("s");
 let urlLeagueState = params.get("l");
 
-if (urlMatchesState && urlLeagueState) {
-  useUrlState = true;
-}
-
 let urlState = {
-  useUrl: useUrlState,
+  useUrl: urlMatchesState && urlLeagueState ? true : false,
   matches: urlMatchesState,
   league: urlLeagueState,
 }
@@ -49,7 +44,6 @@ export async function getData(league) {
     urlState.useUrl = false;
     urlStore.set(urlState);
   }
-  // console.log("getData ran" + urlMatchesState);
 }
 
 function sortData(data, league, urlState) {
